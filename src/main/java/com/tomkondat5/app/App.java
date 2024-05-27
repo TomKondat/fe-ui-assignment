@@ -14,22 +14,30 @@ import org.openqa.selenium.chrome.ChromeDriver;
 public class App {
     public static void main(String[] args) {
         WebDriver driver = new ChromeDriver();
-        driver.get("https://www.linkedin.com/");
+        driver.get("https://www.linkedin.com/login");
         System.out.println(driver.getTitle());
 
-        // Wait for browser to warm up
         driver.manage().timeouts().implicitlyWait(Duration.ofMillis(500));
 
-        // Select elements
         WebElement key = driver.findElement(By.name("session_key"));
-        key.sendKeys("123456");
-        WebElement password = driver.findElement(By.name("session_password"));
-        password.sendKeys("1234");
-        WebElement loginButton = driver
-                .findElement(By.xpath("//button[@data-tracking-control-name=\"homepage-basic_sign-in-submit-btn\"]"));
+        key.sendKeys("");
 
-        // Interact
+        WebElement password = driver.findElement(By.name("session_password"));
+        password.sendKeys("");
+
+        WebElement loginButton = driver
+                .findElement(By.xpath("//button[@data-litms-control-urn=\"login-submit\"]"));
+
         loginButton.click();
+
+        WebElement meButton = driver.findElement(By.id("ember16"));
+        meButton.click();
+
+        WebElement profileButton = driver.findElement(By.className("artdeco-entity-lockup__title"));
+        profileButton.click();
+
+        WebElement connectionsSpan = driver.findElement(By.xpath("//span[text()=' connections']"));
+        connectionsSpan.click();
 
         // Close browser
         // driver.quit();
