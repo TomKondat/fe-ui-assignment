@@ -1,18 +1,16 @@
 package com.tomkondat5.app;
 
 import java.time.Duration;
+import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-/**
- * Hello world!
- *
- */
 public class App {
     public static void main(String[] args) {
+
         WebDriver driver = new ChromeDriver();
         driver.get("https://www.linkedin.com/login");
         System.out.println(driver.getTitle());
@@ -39,7 +37,15 @@ public class App {
         WebElement connectionsSpan = driver.findElement(By.xpath("//span[text()=' connections']"));
         connectionsSpan.click();
 
-        // Close browser
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+        List<WebElement> connections = driver.findElements(By.cssSelector(".mn-connection-card__details"));
+        for (WebElement connection : connections) {
+            String name = connection.findElement(By.cssSelector(".mn-connection-card__name")).getText();
+            String title = connection.findElement(By.cssSelector(".mn-connection-card__occupation")).getText();
+            String lastConnected = connection.findElement(By.cssSelector(".time-badge")).getText();
+            System.out.println(name + "\n" + title + "\n" + lastConnected + "\n");
+        }
         // driver.quit();
     }
 }
