@@ -6,9 +6,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import io.github.cdimascio.dotenv.Dotenv;
 
 public class App {
     public static void main(String[] args) {
+
+        Dotenv dotenv = null;
+        dotenv = Dotenv.configure().load();
 
         WebDriver driver = new ChromeDriver();
         driver.get("https://www.linkedin.com/home");
@@ -25,11 +29,11 @@ public class App {
 
             // Go to username
             WebElement key = driver.findElement(By.name("session_key"));
-            key.sendKeys("");
+            key.sendKeys(dotenv.get("SELENIUM_EMAIL"));
 
             // Go to password
             WebElement password = driver.findElement(By.name("session_password"));
-            password.sendKeys("");
+            password.sendKeys(dotenv.get("SELENIUM_PASSWORD"));
 
             // Click on 'login' button
             WebElement loginButton = driver
