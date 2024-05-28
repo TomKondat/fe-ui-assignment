@@ -1,7 +1,6 @@
 package com.tomkondat5.app;
 
 import java.time.Duration;
-import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -12,40 +11,53 @@ public class App {
     public static void main(String[] args) {
 
         WebDriver driver = new ChromeDriver();
-        driver.get("https://www.linkedin.com/login");
-        System.out.println(driver.getTitle());
+        driver.get("https://www.linkedin.com/home");
 
-        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(500));
+        // Wait for the page to load and make sure I have time for captcha
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
 
-        WebElement key = driver.findElement(By.name("session_key"));
-        key.sendKeys("");
+        try {
 
-        WebElement password = driver.findElement(By.name("session_password"));
-        password.sendKeys("");
+            // Click on 'sign in' button
+            WebElement signInButton = driver
+                    .findElement(By.xpath("//a[@data-tracking-control-name='guest_homepage-basic_nav-header-signin']"));
+            signInButton.click();
 
-        WebElement loginButton = driver
-                .findElement(By.xpath("//button[@data-litms-control-urn=\"login-submit\"]"));
+            // Go to username
+            WebElement key = driver.findElement(By.name("session_key"));
+            key.sendKeys("");
 
-        loginButton.click();
+            // Go to password
+            WebElement password = driver.findElement(By.name("session_password"));
+            password.sendKeys("");
 
-        WebElement meButton = driver.findElement(By.id("ember16"));
-        meButton.click();
+            // Click on 'login' button
+            WebElement loginButton = driver
+                    .findElement(By.xpath("//button[@data-litms-control-urn=\"login-submit\"]"));
+            loginButton.click();
 
-        WebElement profileButton = driver.findElement(By.className("artdeco-entity-lockup__title"));
-        profileButton.click();
+            // Click on 'me' button
+            WebElement meButton = driver.findElement(By.id("ember16"));
+            meButton.click();
 
-        WebElement connectionsSpan = driver.findElement(By.xpath("//span[text()=' connections']"));
-        connectionsSpan.click();
+            // Click on 'view profile' button
+            WebElement profileButton = driver.findElement(By.className("artdeco-entity-lockup__title"));
+            profileButton.click();
 
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            // Get my info and print it
+            FetchPersonalInfo.printPersonalInfo(driver);
 
-        List<WebElement> connections = driver.findElements(By.cssSelector(".mn-connection-card__details"));
-        for (WebElement connection : connections) {
-            String name = connection.findElement(By.cssSelector(".mn-connection-card__name")).getText();
-            String title = connection.findElement(By.cssSelector(".mn-connection-card__occupation")).getText();
-            String lastConnected = connection.findElement(By.cssSelector(".time-badge")).getText();
-            System.out.println(name + "\n" + title + "\n" + lastConnected + "\n");
+            // Click on 'connections' button
+            WebElement connectionsSpan = driver.findElement(By.xpath("//span[text()=' connections']"));
+            connectionsSpan.click();
+
+            // Get all connections info and print it
+            FetchConnections.printConnections(driver);
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            driver.quit();
         }
-        // driver.quit();
     }
 }
